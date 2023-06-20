@@ -1,0 +1,14 @@
+[
+    {
+        "id":0,
+        "todo":"Do something nice for someone I care about"
+    },
+    {
+        "id":1,
+        "todo":"Do something nice for the one I love"
+    },
+    {
+        "id":2,
+        "todo":"Do something nice for someone I don't know"
+    }    
+]
