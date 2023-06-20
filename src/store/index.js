@@ -1,54 +1,59 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import { createStore } from 'vuex'
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
-  state: {
-    done: true,
-    ttodos: [],
-    todos: [],
-  },
-
-  getters: {
-    allTTodos: (state) => state.ttodos,
-    allTodos: (state) => state.todos,
-    done: (state) => state.done,
-  },
-  actions: {
-    changedone({ commit }) {
-      commit("change_complete");
+const store = createStore({
+    state : {          
+            ttodos: [],
+            todoList: [], 
+        },
+    getters: {
+        allTTodos: (state) => state.ttodos,
+        allTodos: (state) => state.todoList,
+        done: (state) => state.done,
     },
-    addTodo({ commit }, todo) {
-      commit("add_todo", todo);
+    actions: {
+        set_as_done({ commit }) {
+        commit("set_as_done");
+        },
+        load({commit}, list) {
+            commit("load",list)
+        },
+        addTodo({ commit }, todo) {
+        commit("add", todo);
+        },
+        deleteTodo({ commit }, id) {
+        commit("delete", id);
+        },
+        updateTodo({ commit }, todo) {
+        commit("update", todo);
+        },
     },
-    deleteTodo({ commit }, id) {
-      commit("delete_todo", id);
+    mutations: {
+        load(state,list) {
+            state.todoList = [...list] 
+        },
+        add(state, item) {
+        state.todoList.push(item);
+        state.ttodos = state.todoList;
+        },  
+        update(state, item) {
+        let index = state.todoList.findIndex((t) => t.id == item.id);
+        if (index != -1) {
+            state.todoList[index] = item;
+        }
+        },
+        delete(state, id) {
+            state.todoList = state.todoList.filter((todo) => todo.id != id);
+            state.ttodos = state.todoList;
+        },
+        set_as_done(state) {
+        state.ttodos = state.todoList;
+        state.done = state.done == true ? false : true;
+        state.ttodos = state.ttodos.filter((t) => t.done == state.done);
+        },
     },
-    updateTodo({ commit }, todo) {
-      commit("update_todo", todo);
-    },
-  },
-  mutations: {
-    add_todo(state, todo) {
-      state.todos.push(todo);
-      state.ttodos = state.todos;
-    },
-    delete_todo(state, id) {
-      state.todos = state.todos.filter((todo) => todo.id != id);
-      state.ttodos = state.todos;
-    },
-    update_todo(state, todo) {
-      let index = state.todos.findIndex((t) => t.id == todo.id);
-      if (index != -1) {
-        state.todos[index] = todo;
-      }
-    },
-    change_complete(state) {
-      state.ttodos = state.todos;
-      state.done = state.done == true ? false : true;
-      state.ttodos = state.ttodos.filter((t) => t.complete == state.done);
-    },
-  },
-  modules: {},
+    modules: {},
 });
+ 
+
+ export default store
+

@@ -1,14 +1,17 @@
 [
     {
         "id":0,
-        "todo":"Do something nice for someone I care about"
+        "todo":"Do something nice for someone I care about",
+        "done": false
     },
     {
         "id":1,
-        "todo":"Do something nice for the one I love"
+        "todo":"Do something nice for the one I love",
+        "done": false
     },
     {
         "id":2,
-        "todo":"Do something nice for someone I don't know"
+        "todo":"Do something nice for someone I don't know",
+        "done": false
     }    
 ]
