@@ -1,54 +1,60 @@
 import { createStore } from 'vuex'
 
 const store = createStore({
-    state : {          
-            ttodos: [],
+    state : {           
             todoList: [], 
         },
-    getters: {
-        allTTodos: (state) => state.ttodos,
-        allTodos: (state) => state.todoList,
-        done: (state) => state.done,
+    getters: {  
+        allTodos: (state) => state.todoList,  
     },
     actions: {
-        set_as_done({ commit }) {
-        commit("set_as_done");
+        set_status({commit}, {id, isDone}) {         
+            commit("set_as_done", {id, isDone});
         },
         load({commit}, list) {
             commit("load",list)
         },
+        clearList({commit}, list) {
+            commit("clear",list)
+        },
         addTodo({ commit }, todo) {
-        commit("add", todo);
+            commit("add", todo);
         },
         deleteTodo({ commit }, id) {
-        commit("delete", id);
+            commit("delete", id);
         },
         updateTodo({ commit }, todo) {
-        commit("update", todo);
+            commit("update", todo);
         },
     },
     mutations: {
         load(state,list) {
+            list.forEach(item => {
+                item.done = false
+                item.date = new Date()
+            });      
             state.todoList = [...list] 
         },
         add(state, item) {
-        state.todoList.push(item);
-        state.ttodos = state.todoList;
+            state.todoList.push(item);       
         },  
         update(state, item) {
-        let index = state.todoList.findIndex((t) => t.id == item.id);
-        if (index != -1) {
-            state.todoList[index] = item;
-        }
+            let index = state.todoList.findIndex((t) => t.id == item.id);
+            if (index != -1) {
+                state.todoList[index] = item;
+            }
         },
         delete(state, id) {
-            state.todoList = state.todoList.filter((todo) => todo.id != id);
-            state.ttodos = state.todoList;
+            state.todoList = state.todoList.filter((todo) => todo.id != id);       
         },
-        set_as_done(state) {
-        state.ttodos = state.todoList;
-        state.done = state.done == true ? false : true;
-        state.ttodos = state.ttodos.filter((t) => t.done == state.done);
+        clear(state) {
+            state.todoList = []
+        },
+        set_as_done(state,{id,isDone}) {  
+            let index = state.todoList.findIndex((t) => t.id === id);   
+            if (index != -1) {
+                state.todoList[index].done = isDone;
+            }           
         },
     },
     modules: {},

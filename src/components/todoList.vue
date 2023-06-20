@@ -1,16 +1,18 @@
 <template>
   <div class="container overflow-hidden text-center">
-        <div class="container text-center">
-             <div class="form-floating  row ">
+        <div class="container text-center d-flex justify-content-center">
+             <div class="form-floating  col-10">
                 <input class="form-control" type="text" id="floatingInput" placeholder="todo Item" 
                     v-model="inputItems"
                 @keyup.enter="enterItem">
                 <label for="floatingInput">todo Item</label>           
             </div>
-            <button @click="enterItem" class="btn btn-primary">Add</button>
+            <div  class="mx-2">
+                <button @click="enterItem" class="btn btn-outline-primary btn-lg">Add</button>
+            </div>       
         </div>
   
-    <div class="d-flex justify-content-center ">
+    <div class="d-flex justify-content-center my-2">
         <button type="button" class="btn btn-primary" @click="loadjSON" :disabled="isloadingJson">          
             <span v-if="!isloadingJson"> loadjSON</span>
             <div v-else>
@@ -23,12 +25,12 @@
     </div>
       
     
-   
+   <div v-for="item in todoLists"  :key="item.id" class="d-flex">
     <todo-Item 
-        v-for="item in todoLists" 
-        :key="item.id" 
         :itemObj="item">
-    </todo-Item>            
+    </todo-Item>   
+   </div>
+             
   </div>
 </template>
 
@@ -36,37 +38,50 @@
 import jsonTodos from "../assets/todos.json"
 import todoItem from "./todoItem.vue"
 import {generate} from "shortid"
+import moment from 'moment'
 export default {
     components:{todoItem},
     data() {
         return {
             jsonTodos,
-            inputItems:'',
-            todoLists:[],
+            inputItems:'',        
             isloadingJson:false
         }
     },
+    computed: {
+        todoLists() {
+            return this.$store.getters.allTodos         
+        }
+    },  
     mounted() {
        
     },
     methods: {
         loadjSON() {
-            this.todoLists = []
-            this.isloadingJson = true        
+            //loading animation
+            this.isloadingJson = true  
+            //clear the array List
+            this.$store.dispatch('clearList')
             setTimeout(() => {
-                this.todoLists = [...this.jsonTodos]  
+                //load from the Json file
+                this.$store.dispatch('load',jsonTodos)              
                 this.isloadingJson = false
-            }, 1000);   
+            }, 500);   
         },
         enterItem() {
-            console.log(this.$store.state)
             const data = {
                 id: generate(),
                 todo: this.inputItems,
-                done:false
-            }      
-
-            this.inputItems = ''
+                done:false,
+                date: moment()
+            }    
+            // if has input value 
+            if(this.inputItems) {
+                // adding to the store
+                this.$store.dispatch('addTodo',data) 
+                // clear the form input
+                this.inputItems = ''
+            }
         }
     },
 }
