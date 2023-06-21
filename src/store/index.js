@@ -30,7 +30,7 @@ const store = createStore({
     mutations: {
         load(state,list) {
             list.forEach(item => {
-                item.done = false
+                item.completed = false
                 item.date = new Date()
             });      
             state.todoList = [...list] 
@@ -38,14 +38,14 @@ const store = createStore({
         add(state, item) {
             state.todoList.push(item);       
         },  
-        update(state, item) {
-            let index = state.todoList.findIndex((t) => t.id == item.id);
-            if (index != -1) {
-                state.todoList[index] = item;
-            }
+        update(state, item) {        
+            let index = state.todoList.findIndex((t) => t.id === item.id);         
+            if (index !== -1) {
+                state.todoList[index] = {...item};              
+            }        
         },
         delete(state, id) {
-            state.todoList = state.todoList.filter((todo) => todo.id != id);       
+            state.todoList = state.todoList.filter((todo) => todo.id !== id);       
         },
         clear(state) {
             state.todoList = []
@@ -53,7 +53,7 @@ const store = createStore({
         set_as_done(state,{id,isDone}) {  
             let index = state.todoList.findIndex((t) => t.id === id);   
             if (index != -1) {
-                state.todoList[index].done = isDone;
+                state.todoList[index].completed = isDone;
             }           
         },
     },

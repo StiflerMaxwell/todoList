@@ -4,7 +4,7 @@ import todoList from './components/todoList.vue'
 
 <template>
   <div class="d-flex flex-column">
-    <h3>Chengchang Ran(Maxwell)'s to do List</h3>
+    <h3>Chengchang Ran's to do List</h3>
     <todoList/>   
   </div>
   
